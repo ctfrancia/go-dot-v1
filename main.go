@@ -6,14 +6,20 @@ import (
 	// "flag"
 	"bufio"
 	// "io/ioutil"
+	"log"
 	"os"
-	// "reflect"
+	"os/user"
+	"path/filepath"
 	"strings"
 )
 
+const defaultZshPathUnix = "~/.zshrc"
+const defaultInitVimPathUnix = "~/.config"
+const goDotFilePermission = 0777
+
 func check(e error) {
 	if e != nil {
-		panic(e)
+		log.Fatal(e)
 	}
 }
 
@@ -31,6 +37,17 @@ type dotFiles struct {
 }
 
 func main() {
+	usr, err := user.Current()
+	check(err)
+
+	filedir := filepath.Join(usr.HomeDir, "/godot")
+	check(err)
+
+	if _, err := os.Stat(filedir); os.IsNotExist(err) {
+		err = os.MkdirAll(filedir, 0777)
+		check(err)
+	}
+
 	r := bufio.NewReader(os.Stdin)
 
 	fmt.Print("do you wish to track your zshrc file(y/n)?: ")
@@ -38,23 +55,11 @@ func main() {
 	text = strings.TrimSuffix(text, "\n")
 
 	if text == "y" || text == "yes" {
-		fmt.Print("is it located in the default location(y/n)?")
+		fmt.Print("is it located in the default location(y/n)?: ")
 		text, _ := r.ReadString('\n')
 		text = strings.TrimSuffix(text, "\n")
 		if text == "y" || text == "yes" {
 
 		}
 	}
-	/*
-		fmt.Println(text)
-		fmt.Print("second text: ")
-		text, _ = r.ReadString('\n')
-	*/
-
-	/*
-		dat, err := ioutil.ReadFile("/certs/github")
-		check(err)
-
-		fmt.Println(dat)
-	*/
 }
