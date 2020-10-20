@@ -62,7 +62,7 @@ func main() {
 
 	if text == "y" || text == "yes" {
 		fmt.Print("is it located in the default location(y/n)?: ")
-		text, _ := r.ReadString('\n')
+		text, _ = r.ReadString('\n')
 		text = strings.TrimSuffix(text, "\n")
 		if text == "y" || text == "yes" {
 			zshrcPath = filepath.Join(usr.HomeDir, ".zshrc")
