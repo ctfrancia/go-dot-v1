@@ -13,8 +13,8 @@ import (
 	"strings"
 )
 
-const defaultZshPathUnix = "~/.zshrc"
-const defaultInitVimPathUnix = "~/.config"
+const zshFilename = ".zshrc"
+const initVimFilename = ".config"
 const goDotFilePermission = 0777
 
 func check(e error) {
@@ -37,15 +37,21 @@ type dotFiles struct {
 }
 
 func main() {
+	var zshrcPath string
+
 	usr, err := user.Current()
 	check(err)
 
-	filedir := filepath.Join(usr.HomeDir, "/godot")
+	godotFile := filepath.Join(usr.HomeDir, "/godot")
 	check(err)
 
-	if _, err := os.Stat(filedir); os.IsNotExist(err) {
-		err = os.MkdirAll(filedir, 0777)
+	if _, err := os.Stat(godotFile); os.IsNotExist(err) {
+		err = os.MkdirAll(godotFile, 0777)
 		check(err)
+
+		f, err := os.Create(filepath.Join(godotFile, "config.json"))
+		check(err)
+		defer f.Close()
 	}
 
 	r := bufio.NewReader(os.Stdin)
@@ -59,7 +65,8 @@ func main() {
 		text, _ := r.ReadString('\n')
 		text = strings.TrimSuffix(text, "\n")
 		if text == "y" || text == "yes" {
-
+			zshrcPath = filepath.Join(usr.HomeDir, ".zshrc")
+			fmt.Println(zshrcPath)
 		}
 	}
 }
