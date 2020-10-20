@@ -24,20 +24,13 @@ func check(e error) {
 }
 
 type dotFiles struct {
-	initVimFile      string
-	hasInitVimFile   bool
-	zshrc            string
-	hasZshrc         bool
-	bashProfile      string
-	hasBashProfile   bool
-	githubAcct       string
-	hasGitHubAcct    bool
-	bitbucketAcct    string
-	hasBitBucketAcct bool
+	zshrcPath string
 }
 
 func main() {
-	var zshrcPath string
+	var df dotFiles
+	// var zshrcPath string
+	// var initVimPath string
 
 	usr, err := user.Current()
 	check(err)
@@ -65,8 +58,8 @@ func main() {
 		text, _ = r.ReadString('\n')
 		text = strings.TrimSuffix(text, "\n")
 		if text == "y" || text == "yes" {
-			zshrcPath = filepath.Join(usr.HomeDir, ".zshrc")
-			fmt.Println(zshrcPath)
+			df.zshrcPath = filepath.Join(usr.HomeDir, ".zshrc")
+			fmt.Println(df.zshrcPath)
 		}
 	}
 }
