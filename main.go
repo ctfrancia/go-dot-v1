@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	// "github.com/google/go-github/v32/github"
-	// "flag"
 	"bufio"
+	"github.com/ctfrancia/go-dot/userfiles"
 	// "io/ioutil"
 	"log"
 	"os"
@@ -24,28 +24,15 @@ func check(e error) {
 }
 
 type dotFiles struct {
-	zshrcPath string
+	zshrcPath   string
+	initVimPath string
 }
 
 func main() {
 	var df dotFiles
-	// var zshrcPath string
-	// var initVimPath string
-
 	usr, err := user.Current()
-	check(err)
 
-	godotFile := filepath.Join(usr.HomeDir, "/godot")
-	check(err)
-
-	if _, err := os.Stat(godotFile); os.IsNotExist(err) {
-		err = os.MkdirAll(godotFile, 0777)
-		check(err)
-
-		f, err := os.Create(filepath.Join(godotFile, "config.json"))
-		check(err)
-		defer f.Close()
-	}
+	userfiles.InitUser()
 
 	r := bufio.NewReader(os.Stdin)
 
