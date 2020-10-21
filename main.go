@@ -4,7 +4,7 @@ import (
 	"fmt"
 	// "github.com/google/go-github/v32/github"
 	"bufio"
-	"github.com/ctfrancia/go-dot/userfiles"
+	// "github.com/ctfrancia/go-dot/userfiles"
 	// "io/ioutil"
 	"log"
 	"os"
@@ -30,9 +30,21 @@ type dotFiles struct {
 
 func main() {
 	var df dotFiles
-	usr, err := user.Current()
 
-	userfiles.InitUser()
+	usr, err := user.Current()
+	check(err)
+
+	godotFile := filepath.Join(usr.HomeDir, "/godot")
+	check(err)
+
+	if _, err := os.Stat(godotFile); os.IsNotExist(err) {
+		err = os.MkdirAll(godotFile, 0777)
+		check(err)
+
+		f, err := os.Create(filepath.Join(godotFile, "config.json"))
+		check(err)
+		defer f.Close()
+	}
 
 	r := bufio.NewReader(os.Stdin)
 
